@@ -1,5 +1,5 @@
 module Amistad
-  module ActiveRecordFriendshipModel
+  module ActiveRecordGroupFriendshipModel
     extend ActiveSupport::Concern
 
     included do
