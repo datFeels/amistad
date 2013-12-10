@@ -1,5 +1,5 @@
 module Amistad
-  module FriendshipModel
+  module GroupFriendshipModel
     def self.included(receiver)
       if receiver.ancestors.map(&:to_s).include?("ActiveRecord::Base")
         receiver.class_exec do
