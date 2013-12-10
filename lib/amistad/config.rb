@@ -1,6 +1,7 @@
 module Amistad
   class << self
     attr_accessor :friend_model
+    attr_accessor :group_friend_model
 
     def configure
       yield self
