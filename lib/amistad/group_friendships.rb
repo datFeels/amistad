@@ -1,19 +1,15 @@
 module Amistad
   module GroupFriendships
     if Object.const_defined? :ActiveRecord
-      const_set Amistad.friendship_model, Class.new(ActiveRecord::Base)
-      const_get(Amistad.friendship_model.to_sym).class_exec do
+      const_set Amistad.group_friendship_model, Class.new(ActiveRecord::Base)
+      const_get(Amistad.group_friendship_model.to_sym).class_exec do
         include Amistad::GroupFriendshipModel
         self.table_name = 'friendships'
       end
     elsif Object.const_defined? :Mongoid
-      Friendship = Class.new
-      Friendship.class_exec do
-        include Mongoid::Document
-        include Amistad::FriendshipModel
-      end
+      raise('Mongoid Not Implemented for GroupFriendships')
     else
-      raise "Amistad only supports ActiveRecord and Mongoid"
+      raise "Amistad only supports ActiveRecord"
     end
   end
 end
