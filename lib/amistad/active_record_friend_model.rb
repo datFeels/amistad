@@ -1,5 +1,3 @@
-require 'squeel'
-
 module Amistad
   module ActiveRecordFriendModel
     extend ActiveSupport::Concern
@@ -82,22 +80,11 @@ module Amistad
     def friends
       friendship_model = Amistad::Friendships.const_get(:"#{Amistad.friendship_model}")
 
-      approved_friendships = friendship_model.where{
-        ( friendable_id == my{id} ) &
-        ( pending       == false  ) &
-        ( blocker_id    == nil    )
-      }
+      approved_friendships_query = friendship_model.select(:friend_id).where(friendable_id: self.id, pending: false, blocker_id: nil).to_sql
 
-      approved_inverse_friendships = friendship_model.where{
-        ( friend_id  == my{id} ) &
-        ( pending    == false   ) &
-        ( blocker_id == nil     )
-      }
+      approved_inverse_friendships_query = friendship_model.select(:friendable_id).where(friend_id: self.id, pending: false, blocker_id: nil).to_sql
 
-      self.class.where{
-        ( id.in(approved_friendships.select{friend_id})              ) |
-        ( id.in(approved_inverse_friendships.select{friendable_id})  )
-      }
+      self.class.where("id IN (#{ approved_friendships_query }) OR id IN (#{ approved_inverse_friendships_query })")
     end
 
     # total # of invited and invited_by without association loading
